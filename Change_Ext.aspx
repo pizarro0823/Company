@@ -57,11 +57,9 @@
 
         .alert-success {
             color: white;
-            background-color:forestgreen;
+            background-color: forestgreen;
             border-color: black;
         }
-
-          
     </style>
 
     <title>Job_Change</title>
@@ -137,7 +135,8 @@
                                             <asp:Label Text="Fecha: " runat="server" />
                                         </td>
                                         <td>
-                                            <asp:TextBox ID="texbox_fecha_hist" runat="server" CssClass="form-control " Width="120" />
+                                            <asp:TextBox ID="texbox_fecha_hist" OnLoad="texbox_fecha_hist_Load" runat="server" CssClass="form-control " Width="120" />
+
                                         </td>
                                         <td>
                                             <asp:LinkButton ID="lbtag" runat="server" CausesValidation="false" OnClick="lbtag_Click">
@@ -207,7 +206,8 @@
                                             <asp:Label Text="Defectos Impactan:" runat="server" Width="90" />
                                         </td>
                                         <td>
-                                            <asp:DropDownList runat="server" CssClass="form-control" AutoPostBack="true" ID="texbox_defec_imapc" OnSelectedIndexChanged="texbox_defec_imapc_SelectedIndexChanged">
+                                            <asp:DropDownList runat="server" CssClass="form-control" AppendDataBoundItems="true" AutoPostBack="true" ID="texbox_defec_imapc" OnSelectedIndexChanged="texbox_defec_imapc_SelectedIndexChanged">
+                                                <asp:ListItem Value="0">&lt;Seleccione un Item&gt;</asp:ListItem>
                                             </asp:DropDownList>
                                         </td>
                                         <td colspan="5" rowspan="2">Observaciones *<asp:TextBox ID="texbox_observaciones" runat="server" CssClass="form-control" Width="500" Height="70" /></td>
@@ -218,7 +218,6 @@
                                         </td>
                                         <td>
                                             <asp:DropDownList ID="texbox_necesidades" runat="server" CssClass="form-control">
-                                                <asp:ListItem Text="" />
                                             </asp:DropDownList>
                                         </td>
                                     </tr>
@@ -231,15 +230,13 @@
                                                 <asp:Button Text="Registar" CssClass="btn btn-success" OnClick="insertar" runat="server" />
                                             </td>
                                             <td>
-                                                <asp:Button Text="Buscar Referencia" CssClass="btn btn-primary" runat="server" OnClick="Unnamed_Click" />
+                                                <asp:Button Text="Buscar Referencia" CssClass="btn btn-primary" Visible="false" runat="server" OnClick="Unnamed_Click" />
                                             </td>
                                         </tr>
                                     </table>
                                 </div>
                             </div>
-
                         </div>
-
                         <%--  <div class="scrolling-table-container">
                             <div class="panel-body">
                                 <asp:GridView ID="GridView1" AutoGenerateColumns="false" CssClass="table table-bordered" runat="server">
@@ -261,5 +258,7 @@
             </main>
         </div>
     </form>
+
 </body>
+    <!--V1.1-->
 </html>

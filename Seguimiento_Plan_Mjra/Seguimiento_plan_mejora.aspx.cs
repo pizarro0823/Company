@@ -21,7 +21,7 @@ public partial class Seguimiento_Plan_Mjra_Seguimiento_plan_mejora : System.Web.
         {
             dt = (DataTable)Session["dtseguimiento_plan_mejora"];
         }
-     
+
     }
 
     public SqlConnection cnx = new SqlConnection(ConfigurationManager.ConnectionStrings["conexion"].ConnectionString);
@@ -74,7 +74,14 @@ public partial class Seguimiento_Plan_Mjra_Seguimiento_plan_mejora : System.Web.
 
     protected void Unnamed_Click(object sender, EventArgs e)
     {
-        conexion();
+        if (string.IsNullOrEmpty(texbox_fecha.Text) & string.IsNullOrEmpty(DropDowlist_maquina.Text) & string.IsNullOrEmpty(texbox_Referencia.Text))
+        {
+            mensajeGrowl("Seleccionar Campos", "warning", "grow");
+        }
+        else
+        {
+            conexion();
+        }
     }
 
     protected void Calendar1_SelectionChanged(object sender, EventArgs e)
@@ -94,7 +101,7 @@ public partial class Seguimiento_Plan_Mjra_Seguimiento_plan_mejora : System.Web.
 
         LinkButton lb = (LinkButton)sender;
         GridViewRow row = (GridViewRow)lb.NamingContainer;
-        lbltittlemodal.Text =dt.Rows[row.RowIndex]["maquina"] + " : Referencia " + dt.Rows[row.RowIndex]["referencia"];
+        lbltittlemodal.Text = dt.Rows[row.RowIndex]["maquina"] + " : Referencia " + dt.Rows[row.RowIndex]["referencia"];
 
         Label1.Text = dt.Rows[row.RowIndex]["id_registro_pln"].ToString();
         Label2.Text = dt.Rows[row.RowIndex]["id_pln_accion"].ToString();
@@ -109,7 +116,7 @@ public partial class Seguimiento_Plan_Mjra_Seguimiento_plan_mejora : System.Web.
 
     }
 
-    public void UpdateDB( string sentencia )
+    public void dataDB(string sentencia)
     {
 
         cnx.Open();
@@ -122,13 +129,13 @@ public partial class Seguimiento_Plan_Mjra_Seguimiento_plan_mejora : System.Web.
 
     protected void Unnamed_Load(object sender, EventArgs e)
     {
-        
+
     }
 
     protected void Button1_Click(object sender, EventArgs e)
     {
-        UpdateDB("update registro_plan_mejoramiento_pmp  set peso_plano = " + texbox_peso_plano.Text.Replace(',','.') + ", peso_desplazamiento =" + texbox_peso_desplazamiento.Text.Replace(',','.') + ", velocidad_historica=" + texbox_veloc_hist.Text.Replace(',','.') + ", velocidad_objetivo=" + texbox_velo_objetiv.Text.Replace(',','.') + " where id_registro_pln = " + Label1.Text + "");
-        UpdateDB("update pln_accion_pmp set Observaviones = '"+TextBox_observaciones.Text+"' where id_pln_accion = "+ Label2.Text + "");
+        dataDB("update registro_plan_mejoramiento_pmp  set peso_plano = " + texbox_peso_plano.Text.Replace(',', '.') + ", peso_desplazamiento =" + texbox_peso_desplazamiento.Text.Replace(',', '.') + ", velocidad_historica=" + texbox_veloc_hist.Text.Replace(',', '.') + ", velocidad_objetivo=" + texbox_velo_objetiv.Text.Replace(',', '.') + " where id_registro_pln = " + Label1.Text + "");
+        dataDB("update pln_accion_pmp set Observaviones = '" + TextBox_observaciones.Text + "' where id_pln_accion = " + Label2.Text + "");
         conexion();
         mensajeGrowl("cambios Realizados", "success", "grow");
 
@@ -139,5 +146,15 @@ public partial class Seguimiento_Plan_Mjra_Seguimiento_plan_mejora : System.Web.
         //(null, 'info', 'error', 'success','warning')
         string script = "$.bootstrapGrowl('" + mensaje + "',{ type:'" + tipom + "',offset: {from: 'bottom', amount: 20},width:400});";
         ScriptManager.RegisterStartupScript(this, typeof(Page), nomscript, script, true);
+    }
+
+    public void eliminarRegistro()
+    {
+        dataDB("");
+    }
+
+    protected void texbox_fecha_Load(object sender, EventArgs e)
+    {
+        texbox_fecha.Text = DateTime.Now.ToString("yyy-MM-dd");
     }
 }

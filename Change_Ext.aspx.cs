@@ -21,7 +21,7 @@ public partial class Change_Ext : System.Web.UI.Page
         if (!IsPostBack)
         {
             llenar_combo_box_def_imapct();
-            
+
 
         }
 
@@ -39,7 +39,7 @@ public partial class Change_Ext : System.Web.UI.Page
 
         cnx.Open();
         cmd = new SqlCommand("select maquina, referencia, fecha, peso_plano, peso_desplazamiento, velocidad_historica, velocidad_objetivo, equipo_prensado " +
-                             "from registro_plan_mejoramiento_pmp where maquina = '"+texbox_maquina.Text+"' and referencia = '"+texbox_referencia.Text+"' and  fecha = '"+texbox_fecha_hist.Text+"' ", cnx);
+                             "from registro_plan_mejoramiento_pmp where maquina = '" + texbox_maquina.Text + "' and referencia = '" + texbox_referencia.Text + "' and  fecha = '" + texbox_fecha_hist.Text + "' ", cnx);
         SqlDataAdapter dp2 = new SqlDataAdapter(cmd);
         dp2.Fill(dt);
 
@@ -60,48 +60,54 @@ public partial class Change_Ext : System.Web.UI.Page
         cmd = new SqlCommand(consulta, cnx);
         SqlDataAdapter dp2 = new SqlDataAdapter(cmd);
         dp2.Fill(dt);
-
-        if (dt.Rows.Count != 0)
+        try
         {
-            sentencia_gen = "insert into pln_accion_pmp values ('" + texbox_observaciones.Text + "','" + dt.Rows[0]["id_registro_pln"] + "','" + texbox_necesidades.SelectedValue + "','on')";
-
-            cnx.Open();
-            cmd = new SqlCommand(sentencia_gen, cnx);
-            cmd.ExecuteNonQuery();
-            cnx.Close();
-
-            mensajeGrowl("Se insertaron las observaciones // plan Accion ", "success", "grow");
-        }
-        else
-        {
-            string sentencia_gen1 = "insert into registro_plan_mejoramiento_pmp values('" + texbox_maquina.Text + "','"+texbox_fecha_hist.Text+"','" + texbox_peso_plano.Text.Replace(',','.').Trim() + "','" + texbox_peso_despla.Text.Replace(',', '.').Trim() + "','" + "" + texbox_velocida_hist.Text.Replace(',', '.').Trim() + "','" + texbox_velocida_objet.Text.Replace(',', '.').Trim() + "','" + texbox_equipo_prensa.Text.Replace(',', '.').Trim() +"',GETDATE(),'" + texbox_referencia.Text.ToUpper().Trim()+"')";
-
-            cnx.Open();
-            cmd = new SqlCommand(sentencia_gen1, cnx);
-            cmd.ExecuteNonQuery();
-            cnx.Close();
-
-            DataTable dt2 = new DataTable();
-            cmd = new SqlCommand(consulta, cnx);
-            SqlDataAdapter dp3 = new SqlDataAdapter(cmd);
-            dp3.Fill(dt2);
-
-            mensajeGrowl("Campos ingresados con Exito", "success","grow");
-            
-
-            if (dt2.Rows.Count != 0)
+            if (dt.Rows.Count != 0)
             {
-              string sentencia_gen2 = "insert into pln_accion_pmp values ('" + texbox_observaciones.Text + "','" + dt2.Rows[0]["id_registro_pln"] + "','" + texbox_necesidades.SelectedValue + "','on')";
+                sentencia_gen = "insert into pln_accion_pmp values ('" + texbox_observaciones.Text + "','" + dt.Rows[0]["id_registro_pln"] + "','" + texbox_necesidades.SelectedValue + "','on')";
 
                 cnx.Open();
-                cmd = new SqlCommand(sentencia_gen2, cnx);
+                cmd = new SqlCommand(sentencia_gen, cnx);
                 cmd.ExecuteNonQuery();
                 cnx.Close();
 
-              
+                mensajeGrowl("Se insertaron las observaciones // plan Accion ", "success", "grow");
+            }
+            else
+            {
+                string sentencia_gen1 = "insert into registro_plan_mejoramiento_pmp values('" + texbox_maquina.Text + "','" + texbox_fecha_hist.Text + "','" + texbox_peso_plano.Text.Replace(',', '.').Trim() + "','" + texbox_peso_despla.Text.Replace(',', '.').Trim() + "','" + "" + texbox_velocida_hist.Text.Replace(',', '.').Trim() + "','" + texbox_velocida_objet.Text.Replace(',', '.').Trim() + "','" + texbox_equipo_prensa.Text.Replace(',', '.').Trim() + "',GETDATE(),'" + texbox_referencia.Text.ToUpper().Trim() + "')";
+
+                cnx.Open();
+                cmd = new SqlCommand(sentencia_gen1, cnx);
+                cmd.ExecuteNonQuery();
+                cnx.Close();
+
+                DataTable dt2 = new DataTable();
+                cmd = new SqlCommand(consulta, cnx);
+                SqlDataAdapter dp3 = new SqlDataAdapter(cmd);
+                dp3.Fill(dt2);
+
+                mensajeGrowl("Campos ingresados con Exito", "success", "grow");
+
+
+                if (dt2.Rows.Count != 0)
+                {
+                    string sentencia_gen2 = "insert into pln_accion_pmp values ('" + texbox_observaciones.Text + "','" + dt2.Rows[0]["id_registro_pln"] + "','" + texbox_necesidades.SelectedValue + "','on')";
+
+                    cnx.Open();
+                    cmd = new SqlCommand(sentencia_gen2, cnx);
+                    cmd.ExecuteNonQuery();
+                    cnx.Close();
+
+
+
+                }
 
             }
-
+        }
+        catch (System.Data.SqlClient.SqlException)
+        {
+            mensajeGrowl("Ingesar Campos", "warning", "grow");
         }
         #region ..............
         //foreach (DataRow dtr in dt.Rows) 
@@ -140,7 +146,11 @@ public partial class Change_Ext : System.Web.UI.Page
         texbox_defec_imapc.DataSource = dtcmbo;
         texbox_defec_imapc.DataTextField = "defectos_impactan";
         texbox_defec_imapc.DataValueField = "id_def_imp";
+
         texbox_defec_imapc.DataBind();
+
+
+
         cnx.Close();
 
     }
@@ -180,7 +190,7 @@ public partial class Change_Ext : System.Web.UI.Page
 
     protected void insertar(object sender, EventArgs e)
     {
-       // conexion();
+        // conexion();
         insertar_ref();
     }
 
@@ -200,5 +210,10 @@ public partial class Change_Ext : System.Web.UI.Page
         //(null, 'info', 'error', 'success','warning')
         string script = "$.bootstrapGrowl('" + mensaje + "',{ type:'" + tipom + "',offset: {from: 'bottom', amount: 20},width:400});";
         ScriptManager.RegisterStartupScript(this, typeof(Page), nomscript, script, true);
+    }
+
+    protected void texbox_fecha_hist_Load(object sender, EventArgs e)
+    {
+        texbox_fecha_hist.Text = DateTime.Now.ToString("yyy-MM-dd");
     }
 }

@@ -43,21 +43,20 @@
             position: absolute;
             z-index: 3;
             background-color: white;
-        }.alert-success {
-            color: white;
-            background-color:forestgreen;
-            border-color: black;
         }
 
+        .alert-success {
+            color: white;
+            background-color: forestgreen;
+            border-color: black;
+        }
     </style>
 
-    <title>Job_Change</title>
+    <title>Seguimiento_Ref_Pmp</title>
 
 </head>
 <body>
     <form id="form1" runat="server">
-
-
         <nav class="navbar panel-danger" style="background-color: #dc3545" id="nav">
             <a class="navbar-brand" style="color: white" href="#">Plan de Mejoramiento</a>
         </nav>
@@ -100,7 +99,7 @@
                                     <asp:Label Text="Fecha:" runat="server" />
                                 </td>
                                 <td>
-                                    <asp:TextBox runat="server" ID="texbox_fecha" CssClass="form-control" Width="100px" />
+                                    <asp:TextBox runat="server" ID="texbox_fecha" OnLoad="texbox_fecha_Load" CssClass="form-control" Width="100px" />
                                 </td>
                                 <td>
                                     <asp:LinkButton ID="lbtag" runat="server" CausesValidation="false" OnClick="lbtag_Click">
@@ -115,8 +114,6 @@
                                 <td>
                                     <asp:TextBox runat="server" ID="texbox_Referencia" Width="100px" CssClass="form-control" />
                                 </td>
-
-
                                 <td>
                                     <asp:Label Text="Maquina  :" runat="server" />
                                 </td>
@@ -181,8 +178,8 @@
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                         <h4 class="modal-title" runat="server">Maquina
                             <asp:Label runat="server" ID="lbltittlemodal"></asp:Label>
-                            <asp:Label runat="server" ID="Label1" Visible="false" ></asp:Label>
-                             <asp:Label runat="server" ID="Label2" Visible ="false"></asp:Label>
+                            <asp:Label runat="server" ID="Label1" Visible="false"></asp:Label>
+                            <asp:Label runat="server" ID="Label2" Visible="false"></asp:Label>
                         </h4>
                     </div>
                     <div class="modal-body">
@@ -221,7 +218,7 @@
                                         <label>Observaciones*</label>
                                     </td>
                                     <td colspan="8">
-                                        <asp:TextBox CssClass="form-control" ID="TextBox_observaciones"  runat="server" Width="60%" Height="100px" />
+                                        <asp:TextBox CssClass="form-control" ID="TextBox_observaciones" runat="server" Width="60%" Height="100px" />
                                     </td>
                                 </tr>
                             </table>
