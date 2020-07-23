@@ -11,6 +11,7 @@
     <link type="text/css" href="../bootstrap_1/bootstrap.min.css" rel="stylesheet" />
     <script src="../scripts/jquery-1.9.1.min.js"></script>
     <script src="../scripts/bootstrap.min.js"></script>
+    <script src="../scripts/jquery.bootstrap-growl.min.js"></script>
 
     <link href="../dist/Notifier.min.js" rel="stylesheet" />
     <script src="../dist/Notifier.min.js"></script>
@@ -42,7 +43,12 @@
             position: absolute;
             z-index: 3;
             background-color: white;
+        }.alert-success {
+            color: white;
+            background-color:forestgreen;
+            border-color: black;
         }
+
     </style>
 
     <title>Job_Change</title>
@@ -175,7 +181,8 @@
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                         <h4 class="modal-title" runat="server">Maquina
                             <asp:Label runat="server" ID="lbltittlemodal"></asp:Label>
-                            <asp:Label runat="server" ID="Label1"></asp:Label>
+                            <asp:Label runat="server" ID="Label1" Visible="false" ></asp:Label>
+                             <asp:Label runat="server" ID="Label2" Visible ="false"></asp:Label>
                         </h4>
                     </div>
                     <div class="modal-body">
@@ -222,7 +229,7 @@
                     </div>
 
                     <div class="modal-footer">
-                        <asp:Button ID="Button1" CssClass="btn btn-danger" runat="server" Text="Actulizar" />
+                        <asp:Button ID="Button1" CssClass="btn btn-danger" OnClick="Button1_Click" runat="server" Text="Actualizar Registro" />
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                     </div>
                 </div>

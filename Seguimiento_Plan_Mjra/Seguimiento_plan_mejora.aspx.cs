@@ -26,6 +26,8 @@ public partial class Seguimiento_Plan_Mjra_Seguimiento_plan_mejora : System.Web.
 
     public SqlConnection cnx = new SqlConnection(ConfigurationManager.ConnectionStrings["conexion"].ConnectionString);
     public SqlCommand cmd = new SqlCommand();
+    string id_registro_pln = "";
+    string id_pln_accion = "";
 
     public void conexion()
     {
@@ -92,9 +94,10 @@ public partial class Seguimiento_Plan_Mjra_Seguimiento_plan_mejora : System.Web.
 
         LinkButton lb = (LinkButton)sender;
         GridViewRow row = (GridViewRow)lb.NamingContainer;
-        lbltittlemodal.Text = row.RowIndex + " : " + dt.Rows[row.RowIndex]["id_registro_pln"] + " : " + dt.Rows[row.RowIndex]["id_pln_accion"];
+        lbltittlemodal.Text =dt.Rows[row.RowIndex]["maquina"] + " : Referencia " + dt.Rows[row.RowIndex]["referencia"];
 
-
+        Label1.Text = dt.Rows[row.RowIndex]["id_registro_pln"].ToString();
+        Label2.Text = dt.Rows[row.RowIndex]["id_pln_accion"].ToString();
 
         texbox_peso_plano.Text = dt.Rows[row.RowIndex]["peso_plano"].ToString();
         texbox_peso_desplazamiento.Text = dt.Rows[row.RowIndex]["peso_desplazamiento"].ToString();
@@ -108,7 +111,6 @@ public partial class Seguimiento_Plan_Mjra_Seguimiento_plan_mejora : System.Web.
 
     public void UpdateDB( string sentencia )
     {
-        string var = "update registro_plan_mejoramiento_pmp  set peso_plano = " + texbox_peso_plano + ", peso_desplazamiento =" + texbox_peso_desplazamiento.Text + ", velocidad_historica=" + texbox_veloc_hist + ", velocidad_objetivo=" + texbox_velo_objetiv + " where id_registro_pln = " + dt.Rows[row.RowIndex]["id_registro_pln"] + "";
 
         cnx.Open();
         cmd = new SqlCommand(sentencia, cnx);
@@ -120,7 +122,22 @@ public partial class Seguimiento_Plan_Mjra_Seguimiento_plan_mejora : System.Web.
 
     protected void Unnamed_Load(object sender, EventArgs e)
     {
-        Label lb = (Label)sender;
-        Label1.Text = Label1.Text + lb.Text;
+        
+    }
+
+    protected void Button1_Click(object sender, EventArgs e)
+    {
+        UpdateDB("update registro_plan_mejoramiento_pmp  set peso_plano = " + texbox_peso_plano.Text.Replace(',','.') + ", peso_desplazamiento =" + texbox_peso_desplazamiento.Text.Replace(',','.') + ", velocidad_historica=" + texbox_veloc_hist.Text.Replace(',','.') + ", velocidad_objetivo=" + texbox_velo_objetiv.Text.Replace(',','.') + " where id_registro_pln = " + Label1.Text + "");
+        UpdateDB("update pln_accion_pmp set Observaviones = '"+TextBox_observaciones.Text+"' where id_pln_accion = "+ Label2.Text + "");
+        conexion();
+        mensajeGrowl("cambios Realizados", "success", "grow");
+
+    }
+
+    public void mensajeGrowl(string mensaje, string tipom, string nomscript)
+    {
+        //(null, 'info', 'error', 'success','warning')
+        string script = "$.bootstrapGrowl('" + mensaje + "',{ type:'" + tipom + "',offset: {from: 'bottom', amount: 20},width:400});";
+        ScriptManager.RegisterStartupScript(this, typeof(Page), nomscript, script, true);
     }
 }
