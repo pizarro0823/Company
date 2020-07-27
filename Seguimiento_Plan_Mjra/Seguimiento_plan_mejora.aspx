@@ -1,5 +1,7 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Seguimiento_plan_mejora.aspx.cs" Inherits="Seguimiento_Plan_Mjra_Seguimiento_plan_mejora" %>
 
+<%@ Register Assembly="System.Web.DataVisualization, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" Namespace="System.Web.UI.DataVisualization.Charting" TagPrefix="asp" %>
+
 
 <!DOCTYPE html>
 
@@ -15,7 +17,7 @@
 
     <link href="../dist/Notifier.min.js" rel="stylesheet" />
     <script src="../dist/Notifier.min.js"></script>
-
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <style type="text/css">
         .tabla_combo {
             border-collapse: separate;
@@ -55,6 +57,26 @@
     <title>Seguimiento_Ref_Pmp</title>
 
 </head>
+<script type="text/javascript">
+    google.charts.load('current', { 'packages': ['corechart'] });
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+        var data = google.visualization.arrayToDataTable(<%# Eval("obtenerDatos") %>);
+
+        var options = {
+            title: 'Age vs. Weight comparison',
+            hAxis: { title: 'Age', minValue: 0, maxValue: 15 },
+            vAxis: { title: 'Weight', minValue: 0, maxValue: 15 },
+            legend: 'none'
+        };
+
+        var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
+
+        chart.draw(data, options);
+    }
+</script>
+
 <body>
     <form id="form1" runat="server">
         <nav class="navbar panel-danger" style="background-color: #dc3545" id="nav">
@@ -149,7 +171,12 @@
                                                 <asp:LinkButton Text='<%# Eval("maquina") %>' runat="server" OnClick="Unnamed_Click1" />
                                             </ItemTemplate>
                                         </asp:TemplateField>
-                                        <asp:BoundField HeaderText="Referencia" DataField="referencia" />
+
+                                        <asp:TemplateField HeaderText="Referencia">
+                                            <ItemTemplate>
+                                                <asp:LinkButton Text='<%# Eval("referencia") %>' runat="server" OnClick="Unnamed_Click2" />
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
                                         <asp:BoundField HeaderText="Fecha" DataField="fecha" DataFormatString="{0:yyy/MM/dd}" />
                                         <asp:BoundField HeaderText="Peso Plano" DataField="peso_plano" />
                                         <asp:BoundField HeaderText="Peso Desplazamiento" DataField="peso_desplazamiento" ItemStyle-Width="1%" />
@@ -171,7 +198,6 @@
         <%--Bootstrap Modal Dialog--%>
         <div style="width: 100%" class="modal fade" id="myModal2" role="dialog">
             <div class="modal-dialog modal-lg">
-
                 <!-- Modal content-->
                 <div class="modal-content">
                     <div class="modal-header">
@@ -227,6 +253,30 @@
 
                     <div class="modal-footer">
                         <asp:Button ID="Button1" CssClass="btn btn-danger" OnClick="Button1_Click" runat="server" Text="Actualizar Registro" />
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <%--Bootstrap Modal Graficos --%>
+        <div style="width: 100%" class="modal fade" id="myModal3" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title" runat="server">Linea de Tiempo
+                            <asp:Label runat="server" ID="Label3Referencia"></asp:Label>
+                           
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                         <div id="chart_div" style="width: 900px; height: 500px;"></div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <asp:Button ID="Button2" CssClass="btn btn-danger" OnClick="Button1_Click" runat="server" Text="Actualizar Registro" />
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                     </div>
                 </div>

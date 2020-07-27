@@ -28,6 +28,7 @@ public partial class Seguimiento_Plan_Mjra_Seguimiento_plan_mejora : System.Web.
     public SqlCommand cmd = new SqlCommand();
     string id_registro_pln = "";
     string id_pln_accion = "";
+    string sentencia = "";
 
     public void conexion()
     {
@@ -35,7 +36,7 @@ public partial class Seguimiento_Plan_Mjra_Seguimiento_plan_mejora : System.Web.
         dt = new DataTable();
 
 
-        string sentencia = "select id_pln_accion,registro_plan_mejoramiento_pmp.id_registro_pln,maquina,referencia,fecha,peso_plano,peso_desplazamiento,velocidad_historica,velocidad_objetivo,equipo_prensado," +
+         sentencia = "select id_pln_accion,registro_plan_mejoramiento_pmp.id_registro_pln,maquina,referencia,fecha,peso_plano,peso_desplazamiento,velocidad_historica,velocidad_objetivo,equipo_prensado," +
             " pln_accion_pmp.Observaviones, def_impac_pmp.defectos_impactan, nece_ref_pmp.necesidades_referencia" +
             " from registro_plan_mejoramiento_pmp" +
             " inner join pln_accion_pmp on registro_plan_mejoramiento_pmp.id_registro_pln = pln_accion_pmp.tb_registro_plan_mejoramiento" +
@@ -155,6 +156,50 @@ public partial class Seguimiento_Plan_Mjra_Seguimiento_plan_mejora : System.Web.
 
     protected void texbox_fecha_Load(object sender, EventArgs e)
     {
-        texbox_fecha.Text = DateTime.Now.ToString("yyy-MM-dd");
+       //texbox_fecha.Text = DateTime.Now.ToString("yyy-MM-dd");
+    }
+
+    protected void Unnamed_Click2(object sender, EventArgs e)
+    {
+        LinkButton lb = (LinkButton)sender;
+        GridViewRow row = (GridViewRow)lb.NamingContainer;
+
+        Label3Referencia.Text = dt.Rows[row.RowIndex]["referencia"].ToString();
+        obtenerDatos(" select distinct def_impac_pmp.defectos_impactan,def_impac_pmp.id_def_imp" +
+            " from registro_plan_mejoramiento_pmp" +
+            " inner join pln_accion_pmp on registro_plan_mejoramiento_pmp.id_registro_pln = pln_accion_pmp.tb_registro_plan_mejoramiento" +
+            " inner join relacion_def_impact_necesidades_ref on pln_accion_pmp.tb_relacion_impac_neces_ref = relacion_def_impact_necesidades_ref.id_relacion_def_nece" +
+            " inner join def_impac_pmp on relacion_def_impact_necesidades_ref.tbl_defec_impact = def_impac_pmp.id_def_imp" +
+            " inner join nece_ref_pmp on relacion_def_impact_necesidades_ref.tbl_necesi_refere = nece_ref_pmp.id_pln_acciones where referencia = '"+Label3Referencia.Text+"'");
+
+
+        ScriptManager.RegisterStartupScript(Page, Page.GetType(), "popup", "$('#myModal3').modal();", true);
+    }
+
+    protected string obtenerDatos( string sentenciaSql) 
+    {
+        DataTable dt = new DataTable();
+
+        cnx.Open();
+        cmd = new SqlCommand(sentenciaSql, cnx);
+        SqlDataAdapter dp2 = new SqlDataAdapter(cmd);
+        dp2.Fill(dt);
+        cnx.Close();
+
+        string datos;
+
+        datos = "[['task','hours day '],";
+
+
+        foreach (DataRow dtrow in dt.Rows) 
+        {
+            datos = datos + "[";
+            datos = datos + "'" + dtrow[0] + "'" + "," + dtrow[1];
+            datos = datos + "],";
+
+        }
+
+        datos = datos + "]";
+        return datos;
     }
 }
